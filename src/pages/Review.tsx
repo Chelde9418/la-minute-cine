@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { ARTICE_JOKER } from '../constants';
-import { getArticleById } from '../services/contentService';
+import { getArticleById, getAllArticles } from '../services/contentService';
 import { motion } from 'motion/react';
 import { Star, Clock, Calendar, User, ArrowLeft, MessageSquare, Share2 } from 'lucide-react';
 import Markdown from 'react-markdown';
@@ -11,6 +11,10 @@ export function Review() {
   // Try to load from CMS first, then fallback to constant
   const dynamicArticle = id ? getArticleById(id) : undefined;
   const article = dynamicArticle || ARTICE_JOKER;
+
+  const trendingArticles = getAllArticles()
+    .filter(a => a.trending && a.id !== id)
+    .slice(0, 3);
 
   if (!article) return <div className="pt-32 text-center text-on-surface">Article non trouvé</div>;
 
@@ -110,20 +114,24 @@ export function Review() {
           <div className="bg-surface-container rounded-2xl p-8 sticky top-30">
             <h3 className="text-lg font-black text-on-surface mb-6 uppercase tracking-tight">À lire aussi</h3>
             <div className="space-y-8">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="group cursor-pointer">
-                  <div className="aspect-video rounded-lg overflow-hidden mb-3">
+              {trendingArticles.map((trending) => (
+                <Link key={trending.id} to={`/movies/${trending.id}`} className="group block">
+                  <div className="aspect-video rounded-lg overflow-hidden mb-3 bg-surface-container-highest">
                     <img 
-                      src={`https://images.unsplash.com/photo-${1512070670213 + i}-9a3d4f8fb2a6?auto=format&fit=crop&q=80&w=400`} 
-                      alt="Recommandation" 
+                      src={trending.image} 
+                      alt={trending.title} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
                     />
                   </div>
                   <h4 className="text-sm font-bold text-on-surface group-hover:text-primary-container transition-colors line-clamp-2">
-                    Pourquoi {i === 1 ? 'le cinéma muet' : i === 2 ? 'les remakes' : 'les blockbusters'} reviennent en force cette année
+                    {trending.title}
                   </h4>
-                </div>
+                </Link>
               ))}
+              {trendingArticles.length === 0 && (
+                <p className="text-xs text-on-surface-variant italic">Pas d'articles suggérés pour le moment.</p>
+              )}
             </div>
           </div>
         </aside>
