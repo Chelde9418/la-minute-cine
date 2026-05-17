@@ -1,10 +1,12 @@
 import { Movie, Trend, List } from '../types';
-import { Star, ArrowRight } from 'lucide-react';
+import { Star, ArrowRight, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { getViewCount } from '../services/viewService';
 
 export function MovieCard({ movie, vertical = true }: { movie: Movie, vertical?: boolean }) {
   const imageUrl = movie.image || "https://images.unsplash.com/photo-1542204172-3c1f81d05d8c?auto=format&fit=crop&q=80&w=800";
+  const views = getViewCount(movie.id);
   
   if (!vertical) {
     return (
@@ -22,17 +24,19 @@ export function MovieCard({ movie, vertical = true }: { movie: Movie, vertical?:
             {movie.genre} • {movie.description}
           </span>
           <h3 className="text-lg font-bold text-on-surface mb-3 group-hover:text-primary-container transition-colors line-clamp-1">{movie.title}</h3>
-          {(movie.progress !== undefined || movie.audience !== undefined) && (
-            <div className="space-y-2">
-              <div className="w-full h-1 bg-secondary-container rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-primary-container shadow-[0_0_8px_rgba(229,9,20,0.6)]" 
-                  style={{ width: `${movie.progress || movie.audience || 0}%` }} 
-                />
-              </div>
-              <p className="text-[10px] text-on-surface-variant">{(movie.progress || movie.audience || 0)}% d'audience</p>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-[10px] text-on-surface-variant font-bold uppercase">
+              <Eye size={12} className="text-primary-container" />
+              {views.toLocaleString()} Vues
             </div>
-          )}
+            {movie.rating && (
+               <div className="flex items-center gap-1 text-[10px] text-primary-container font-black">
+                 <Star size={10} fill="currentColor" />
+                 {movie.rating}/5
+               </div>
+            )}
+          </div>
         </div>
       </Link>
     );
@@ -40,7 +44,7 @@ export function MovieCard({ movie, vertical = true }: { movie: Movie, vertical?:
 
   return (
     <Link to={`/movies/${movie.id}`} className="group block">
-      <div className="aspect-[2/3] rounded-lg overflow-hidden relative mb-3 bg-surface-container-highest">
+      <div className="aspect-[2/3] rounded-lg overflow-hidden relative mb-3 bg-surface-container-highest shadow-lg shadow-black/20">
         <img 
           src={imageUrl} 
           alt={movie.title} 
@@ -48,8 +52,12 @@ export function MovieCard({ movie, vertical = true }: { movie: Movie, vertical?:
           referrerPolicy="no-referrer"
         />
         {movie.isNew && (
-          <span className="absolute top-3 right-3 bg-primary-container text-white text-[10px] font-bold px-2 py-0.5 rounded">NEW</span>
+          <span className="absolute top-3 right-3 bg-primary-container text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">NEW</span>
         )}
+        <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] text-white font-bold">
+           <Eye size={10} className="text-primary-container" />
+           {views.toLocaleString()}
+        </div>
       </div>
       <span className="text-[10px] font-bold text-primary-container uppercase tracking-widest">{movie.genre}</span>
       <h3 className="text-lg font-bold text-on-surface mt-1 group-hover:text-primary-container transition-colors line-clamp-1">{movie.title}</h3>

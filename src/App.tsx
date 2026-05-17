@@ -5,6 +5,7 @@ import { Home } from './pages/Home';
 import { Review } from './pages/Review';
 import { Listing } from './pages/Listing';
 import { Legal, Privacy } from './pages/Legal';
+import { Admin } from './pages/Admin';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -28,6 +29,7 @@ function App() {
             <Route path="/series" element={<Listing />} />
             <Route path="/mentions-legales" element={<Legal />} />
             <Route path="/confidentialite" element={<Privacy />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
         <Footer />
