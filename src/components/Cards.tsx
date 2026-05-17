@@ -4,26 +4,33 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 
 export function MovieCard({ movie, vertical = true }: { movie: Movie, vertical?: boolean }) {
+  const imageUrl = movie.image || "https://images.unsplash.com/photo-1542204172-3c1f81d05d8c?auto=format&fit=crop&q=80&w=800";
+  
   if (!vertical) {
     return (
-      <Link to={`/movies/${movie.id}`} className="group block bg-surface-container rounded-lg overflow-hidden border border-outline-variant/30 hover:border-primary-container/50 transition-all">
-        <div className="aspect-video overflow-hidden">
-          <img src={movie.image} alt={movie.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      <Link to={`/movies/${movie.id}`} className="group block bg-surface-container rounded-lg overflow-hidden border border-outline-variant/30 hover:border-primary-container/50 transition-all h-full">
+        <div className="aspect-video overflow-hidden bg-surface-container-highest">
+          <img 
+            src={imageUrl} 
+            alt={movie.title} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+            referrerPolicy="no-referrer"
+          />
         </div>
         <div className="p-4">
           <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1 block">
             {movie.genre} • {movie.description}
           </span>
           <h3 className="text-lg font-bold text-on-surface mb-3 group-hover:text-primary-container transition-colors line-clamp-1">{movie.title}</h3>
-          {movie.progress !== undefined && (
+          {(movie.progress !== undefined || movie.audience !== undefined) && (
             <div className="space-y-2">
               <div className="w-full h-1 bg-secondary-container rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-primary-container shadow-[0_0_8px_rgba(229,9,20,0.6)]" 
-                  style={{ width: `${movie.progress}%` }} 
+                  style={{ width: `${movie.progress || movie.audience || 0}%` }} 
                 />
               </div>
-              <p className="text-[10px] text-on-surface-variant">{movie.audience}% d'audience</p>
+              <p className="text-[10px] text-on-surface-variant">{(movie.progress || movie.audience || 0)}% d'audience</p>
             </div>
           )}
         </div>
@@ -33,8 +40,13 @@ export function MovieCard({ movie, vertical = true }: { movie: Movie, vertical?:
 
   return (
     <Link to={`/movies/${movie.id}`} className="group block">
-      <div className="aspect-[2/3] rounded-lg overflow-hidden relative mb-3">
-        <img src={movie.image} alt={movie.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      <div className="aspect-[2/3] rounded-lg overflow-hidden relative mb-3 bg-surface-container-highest">
+        <img 
+          src={imageUrl} 
+          alt={movie.title} 
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+          referrerPolicy="no-referrer"
+        />
         {movie.isNew && (
           <span className="absolute top-3 right-3 bg-primary-container text-white text-[10px] font-bold px-2 py-0.5 rounded">NEW</span>
         )}
@@ -50,17 +62,22 @@ export function TrendCard({ trend }: { trend: Trend }) {
   return (
     <motion.div 
       whileHover={{ scale: 1.02 }}
-      className="group relative aspect-[16/9] rounded-lg overflow-hidden cursor-pointer"
+      className="group relative w-full aspect-[16/9] rounded-lg overflow-hidden cursor-pointer bg-surface-container-highest"
     >
-      <img src={trend.image} alt={trend.title} className="w-full h-full object-cover" />
+      <img 
+        src={trend.image} 
+        alt={trend.title} 
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+        referrerPolicy="no-referrer"
+      />
       <div className="absolute inset-0 scrim-card flex flex-col justify-end p-6">
         {trend.isNew && (
           <div className="absolute top-4 left-4">
             <span className="bg-primary-container text-white text-[10px] font-bold px-2 py-0.5 rounded">NEW</span>
           </div>
         )}
-        <h3 className="text-xl font-bold text-white mb-1">{trend.title}</h3>
-        <p className="text-sm text-secondary line-clamp-1">{trend.description}</p>
+        <h3 className="text-xl font-bold text-white mb-1 drop-shadow-md">{trend.title}</h3>
+        <p className="text-sm text-white/80 line-clamp-1 drop-shadow-sm">{trend.description}</p>
       </div>
     </motion.div>
   );

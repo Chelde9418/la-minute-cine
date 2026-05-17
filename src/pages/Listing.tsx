@@ -2,6 +2,8 @@ import { useLocation } from 'react-router-dom';
 import { LATEST_MOVIES, TOP_SERIES } from '../constants';
 import { MovieCard } from '../components/Cards';
 import { motion } from 'motion/react';
+import { getAllArticles } from '../services/contentService';
+import { Movie } from '../types';
 
 export function Listing() {
   const location = useLocation();
@@ -12,7 +14,21 @@ export function Listing() {
     ? 'Découvrez nos critiques des derniers longs-métrages sortis en salles et en streaming.' 
     : 'Nos analyses complètes des séries qui font l\'actualité, saison par saison.';
   
-  const items = isFilms ? LATEST_MOVIES : TOP_SERIES;
+  const cmsArticles = getAllArticles();
+  const filteredCms = cmsArticles.filter(a => 
+    isFilms ? a.category === 'Films' : a.category === 'Séries'
+  ).map(a => ({
+    id: a.id,
+    title: a.title,
+    type: (isFilms ? 'film' : 'serie') as any,
+    image: a.image,
+    duration: a.readTime,
+    genre: a.category,
+    description: a.excerpt,
+    rating: a.rating
+  }));
+
+  const items = isFilms ? [...filteredCms, ...LATEST_MOVIES] : [...filteredCms, ...TOP_SERIES];
 
   return (
     <div className="animate-fade-in pt-10">

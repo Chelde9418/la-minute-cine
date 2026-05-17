@@ -3,15 +3,19 @@ import { Star, ArrowRight } from 'lucide-react';
 import { TRENDS, LATEST_MOVIES, TOP_SERIES } from '../constants';
 import { TrendCard, MovieCard } from '../components/Cards';
 import { Link } from 'react-router-dom';
+import { getAllArticles } from '../services/contentService';
 
 export function Home() {
+  const latestArticles = getAllArticles();
+  const heroArticle = latestArticles[0];
+
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
       <section className="relative w-full h-[80vh] min-h-[600px] overflow-hidden">
         <img 
           className="absolute inset-0 w-full h-full object-cover" 
-          src="https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=2000" 
+          src={heroArticle?.image || "https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=2000"} 
           alt="Cinematic Hero" 
         />
         <div className="absolute inset-0 scrim-hero flex flex-col justify-end px-6 pb-20">
@@ -21,7 +25,7 @@ export function Home() {
               animate={{ opacity: 1, y: 0 }}
               className="inline-block bg-primary-container text-white text-xs font-bold px-3 py-1 rounded-sm mb-6"
             >
-              CRITIQUE
+              {heroArticle?.category.toUpperCase() || "CRITIQUE"}
             </motion.span>
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
@@ -29,7 +33,7 @@ export function Home() {
               transition={{ delay: 0.1 }}
               className="text-5xl md:text-7xl font-black text-white mb-6 max-w-4xl leading-tight tracking-tighter"
             >
-              Dune : Deuxième Partie — Le chef-d'œuvre de Villeneuve
+              {heroArticle?.title || "Dune : Deuxième Partie — Le chef-d'œuvre de Villeneuve"}
             </motion.h1>
             <motion.div 
                initial={{ opacity: 0, y: 20 }}
@@ -39,10 +43,10 @@ export function Home() {
             >
               <div className="flex text-primary-container">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={20} fill={i < 4 ? "currentColor" : "none"} strokeWidth={2} />
+                  <Star key={i} size={20} fill={i < (heroArticle?.rating || 4) ? "currentColor" : "none"} strokeWidth={2} />
                 ))}
               </div>
-              <span className="text-sm font-bold text-on-surface">4.5 / 5</span>
+              <span className="text-sm font-bold text-on-surface">{heroArticle?.rating || 4.5} / 5</span>
             </motion.div>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -50,7 +54,7 @@ export function Home() {
               transition={{ delay: 0.3 }}
             >
               <Link 
-                to="/movies/dune-2"
+                to={heroArticle ? `/movies/${heroArticle.id}` : "/movies/dune-2"}
                 className="inline-block bg-primary-container text-white px-10 py-4 text-xl font-bold rounded-lg transition-transform hover:scale-105 active:scale-95"
               >
                 Lire la critique

@@ -1,13 +1,24 @@
 import { useParams, Link } from 'react-router-dom';
 import { ARTICE_JOKER } from '../constants';
+import { getArticleById } from '../services/contentService';
 import { motion } from 'motion/react';
 import { Star, Clock, Calendar, User, ArrowLeft, MessageSquare, Share2 } from 'lucide-react';
 import Markdown from 'react-markdown';
 
 export function Review() {
   const { id } = useParams();
-  // Using ARTICE_JOKER as example for any ID since it's the only one we have
-  const article = ARTICE_JOKER;
+  
+  // Try to load from CMS first, then fallback to constant
+  const dynamicArticle = id ? getArticleById(id) : undefined;
+  const article = dynamicArticle || ARTICE_JOKER;
+
+  if (!article) return <div className="pt-32 text-center text-on-surface">Article non trouvé</div>;
+
+  const displayDate = typeof article.date === 'string' ? article.date : new Date(article.date).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
 
   return (
     <article className="pt-20 animate-fade-in">
@@ -36,7 +47,7 @@ export function Review() {
               </div>
               <div className="flex items-center gap-2">
                 <Calendar size={16} className="text-primary-container" />
-                {article.date}
+                {displayDate}
               </div>
               <div className="flex items-center gap-2">
                 <Clock size={16} className="text-primary-container" />

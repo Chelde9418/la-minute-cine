@@ -1,0 +1,29 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "articles"
+    label: "Articles"
+    folder: "src/content/articles"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "ID", name: "id", widget: "string" }
+      - { label: "Titre", name: "title", widget: "string" }
+      - { 
+          label: "Catégorie", 
+          name: "category", 
+          widget: "select", 
+          options: ["Films", "Séries", "Avis", "Top Lists"] 
+        }
+      - { label: "Image de couverture", name: "image", widget: "image" }
+      - { label: "Temps de lecture", name: "readTime", widget: "string" }
+      - { label: "Auteur", name: "author", widget: "string", default: "LMC Team" }
+      - { label: "Extrait/résumé", name: "excerpt", widget: "string" }
+      - { label: "Date de publication", name: "date", widget: "datetime" }
+      - { label: "Note (/5)", name: "rating", widget: "number", value_type: "int", min: 0, max: 5 }
+      - { label: "Contenu de l'article", name: "body", widget: "markdown" }
