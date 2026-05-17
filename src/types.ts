@@ -23,6 +23,7 @@ export interface Article {
   readTime: string;
   category: string;
   rating?: number;
+  trending?: boolean;
 }
 
 export interface Trend {

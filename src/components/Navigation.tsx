@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
 import { LATEST_MOVIES, TOP_SERIES } from '../constants';
 import { Movie } from '../types';
+import { getAllArticles } from '../services/contentService';
 
 export function Navbar() {
   const location = useLocation();
@@ -33,7 +34,20 @@ export function Navbar() {
     }
 
     const query = searchQuery.toLowerCase();
-    const allContent = [...LATEST_MOVIES, ...TOP_SERIES];
+    
+    // Get CMS articles and convert to Movie format for search
+    const cmsMovies: Movie[] = getAllArticles().map(a => ({
+      id: a.id,
+      title: a.title,
+      type: (a.category.toLowerCase().includes('série') ? 'serie' : 'film') as any,
+      image: a.image,
+      duration: a.readTime,
+      genre: a.category,
+      description: a.excerpt,
+      isNew: true // Articles from CMS are typically fresh
+    }));
+
+    const allContent = [...cmsMovies, ...LATEST_MOVIES, ...TOP_SERIES];
     const filtered = allContent.filter(item => 
       item.title.toLowerCase().includes(query) || 
       item.genre.toLowerCase().includes(query) ||

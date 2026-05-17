@@ -25,5 +25,6 @@ collections:
       - { label: "Auteur", name: "author", widget: "string", default: "LMC Team" }
       - { label: "Extrait/résumé", name: "excerpt", widget: "string" }
       - { label: "Date de publication", name: "date", widget: "datetime" }
+      - { label: "Tendance de la semaine", name: "trending", widget: "boolean", default: false }
       - { label: "Note (/5)", name: "rating", widget: "number", value_type: "int", min: 0, max: 5 }
       - { label: "Contenu de l'article", name: "body", widget: "markdown" }

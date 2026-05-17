@@ -60,26 +60,28 @@ export function MovieCard({ movie, vertical = true }: { movie: Movie, vertical?:
 
 export function TrendCard({ trend }: { trend: Trend }) {
   return (
-    <motion.div 
-      whileHover={{ scale: 1.02 }}
-      className="group relative w-full aspect-[16/9] rounded-lg overflow-hidden cursor-pointer bg-surface-container-highest"
-    >
-      <img 
-        src={trend.image} 
-        alt={trend.title} 
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-        referrerPolicy="no-referrer"
-      />
-      <div className="absolute inset-0 scrim-card flex flex-col justify-end p-6">
-        {trend.isNew && (
-          <div className="absolute top-4 left-4">
-            <span className="bg-primary-container text-white text-[10px] font-bold px-2 py-0.5 rounded">NEW</span>
-          </div>
-        )}
-        <h3 className="text-xl font-bold text-white mb-1 drop-shadow-md">{trend.title}</h3>
-        <p className="text-sm text-white/80 line-clamp-1 drop-shadow-sm">{trend.description}</p>
-      </div>
-    </motion.div>
+    <Link to={`/movies/${trend.id}`} className="block">
+      <motion.div 
+        whileHover={{ scale: 1.02 }}
+        className="group relative w-full aspect-[16/9] rounded-lg overflow-hidden cursor-pointer bg-surface-container-highest"
+      >
+        <img 
+          src={trend.image} 
+          alt={trend.title} 
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 scrim-card flex flex-col justify-end p-6">
+          {trend.isNew && (
+            <div className="absolute top-4 left-4">
+              <span className="bg-primary-container text-white text-[10px] font-bold px-2 py-0.5 rounded">NEW</span>
+            </div>
+          )}
+          <h3 className="text-xl font-bold text-white mb-1 drop-shadow-md">{trend.title}</h3>
+          <p className="text-sm text-white/80 line-clamp-1 drop-shadow-sm">{trend.description}</p>
+        </div>
+      </motion.div>
+    </Link>
   );
 }
 

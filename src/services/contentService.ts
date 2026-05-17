@@ -38,7 +38,8 @@ export const getAllArticles = (): Article[] => {
         excerpt: data.excerpt || '',
         date: data.date || new Date().toISOString(),
         content: body,
-        rating: data.rating ? parseInt(data.rating) : undefined
+        rating: data.rating ? parseInt(data.rating) : undefined,
+        trending: data.trending === 'true' || data.trending === true
       });
     } catch (e) {
       console.error("Failed to parse article:", path, e);

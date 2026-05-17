@@ -9,6 +9,47 @@ export function Home() {
   const latestArticles = getAllArticles();
   const heroArticle = latestArticles[0];
 
+  const cmsTrends = latestArticles
+    .filter(a => a.trending)
+    .map(a => ({
+      id: a.id,
+      title: a.title,
+      description: a.excerpt,
+      image: a.image,
+      idAsLink: `/movies/${a.id}`
+    }));
+
+  const displayTrends = [...cmsTrends, ...TRENDS].slice(0, 3);
+
+  const cmsFilms = latestArticles
+    .filter(a => a.category.toLowerCase() === 'films')
+    .map(a => ({
+      id: a.id,
+      title: a.title,
+      type: 'film' as const,
+      image: a.image,
+      duration: a.readTime,
+      genre: a.category,
+      description: a.excerpt,
+      rating: a.rating
+    }));
+
+  const cmsSeries = latestArticles
+    .filter(a => a.category.toLowerCase().includes('série'))
+    .map(a => ({
+      id: a.id,
+      title: a.title,
+      type: 'serie' as const,
+      image: a.image,
+      duration: a.readTime,
+      genre: a.category,
+      description: a.excerpt,
+      rating: a.rating
+    }));
+
+  const displayFilms = [...cmsFilms, ...LATEST_MOVIES].slice(0, 4);
+  const displaySeries = [...cmsSeries, ...TOP_SERIES].slice(0, 4);
+
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
@@ -68,7 +109,7 @@ export function Home() {
       <section className="max-w-7xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-black text-on-surface mb-10 tracking-tight">Tendances cette semaine</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {TRENDS.map((trend) => (
+          {displayTrends.map((trend) => (
             <TrendCard key={trend.id} trend={trend} />
           ))}
         </div>
@@ -84,7 +125,7 @@ export function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {LATEST_MOVIES.map((movie) => (
+            {displayFilms.map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
           </div>
@@ -101,7 +142,7 @@ export function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {TOP_SERIES.map((serie) => (
+            {displaySeries.map((serie) => (
               <MovieCard key={serie.id} movie={serie} vertical={false} />
             ))}
           </div>

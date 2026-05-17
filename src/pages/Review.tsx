@@ -14,11 +14,11 @@ export function Review() {
 
   if (!article) return <div className="pt-32 text-center text-on-surface">Article non trouvé</div>;
 
-  const displayDate = typeof article.date === 'string' ? article.date : new Date(article.date).toLocaleDateString('fr-FR', {
+  const displayDate = article.date ? new Date(article.date).toLocaleDateString('fr-FR', {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
-  });
+  }) : '';
 
   return (
     <article className="pt-20 animate-fade-in">

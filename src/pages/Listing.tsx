@@ -15,9 +15,14 @@ export function Listing() {
     : 'Nos analyses complètes des séries qui font l\'actualité, saison par saison.';
   
   const cmsArticles = getAllArticles();
-  const filteredCms = cmsArticles.filter(a => 
-    isFilms ? a.category === 'Films' : a.category === 'Séries'
-  ).map(a => ({
+  const filteredCms = cmsArticles.filter(a => {
+    const cat = a.category.toLowerCase();
+    if (isFilms) {
+      return cat === 'films' || cat === 'avis' || cat === 'top lists';
+    } else {
+      return cat === 'séries' || cat === 'series' || cat === 'avis' || cat === 'top lists';
+    }
+  }).map(a => ({
     id: a.id,
     title: a.title,
     type: (isFilms ? 'film' : 'serie') as any,
