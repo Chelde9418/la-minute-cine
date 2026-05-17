@@ -1,0 +1,8 @@
+{
+  "name": "LaMinuteCinéma",
+  "description": "Plateforme premium de critique cinématographique et d'actualité du septième art.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
