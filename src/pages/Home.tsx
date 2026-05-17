@@ -22,7 +22,10 @@ export function Home() {
   const displayTrends = [...cmsTrends, ...TRENDS].slice(0, 3);
 
   const cmsFilms = latestArticles
-    .filter(a => a.category.toLowerCase() === 'films')
+    .filter(a => {
+      const cat = a.category.toLowerCase();
+      return cat.includes('film') || cat.includes('critique') || cat.includes('avis');
+    })
     .map(a => ({
       id: a.id,
       title: a.title,
@@ -35,7 +38,10 @@ export function Home() {
     }));
 
   const cmsSeries = latestArticles
-    .filter(a => a.category.toLowerCase().includes('série'))
+    .filter(a => {
+      const cat = a.category.toLowerCase();
+      return cat.includes('série') || cat.includes('serie') || cat.includes('show');
+    })
     .map(a => ({
       id: a.id,
       title: a.title,

@@ -166,9 +166,9 @@ export const ARTICE_JOKER: Article = {
   title: 'Review: Joker Folie à Deux',
   excerpt: 'Arthur Fleck est de retour, mais cette fois, il n’est pas seul.',
   author: 'Jean-Pierre Morel',
-  date: '12 Octobre 2024',
+  date: '2024-10-12T12:00:00Z',
   readTime: '5 min de lecture',
-  category: 'Critique Exclusive',
+  category: 'Films',
   image: 'https://images.unsplash.com/photo-1531259683007-016a7b628fc3?auto=format&fit=crop&q=80&w=1200',
   rating: 4,
   content: `Arthur Fleck est de retour, mais cette fois, il n’est pas seul. La suite tant attendue du chef-d'œuvre de Todd Phillips brouille les pistes entre réalité et comédie musicale.

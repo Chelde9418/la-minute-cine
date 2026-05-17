@@ -18,9 +18,9 @@ export function Listing() {
   const filteredCms = cmsArticles.filter(a => {
     const cat = a.category.toLowerCase();
     if (isFilms) {
-      return cat === 'films' || cat === 'avis' || cat === 'top lists';
+      return cat.includes('film') || cat.includes('critique') || cat.includes('avis') || cat.includes('top');
     } else {
-      return cat === 'séries' || cat === 'series' || cat === 'avis' || cat === 'top lists';
+      return cat.includes('série') || cat.includes('serie') || cat.includes('show') || cat.includes('show');
     }
   }).map(a => ({
     id: a.id,

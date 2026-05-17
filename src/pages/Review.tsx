@@ -14,11 +14,23 @@ export function Review() {
 
   if (!article) return <div className="pt-32 text-center text-on-surface">Article non trouvé</div>;
 
-  const displayDate = article.date ? new Date(article.date).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  }) : '';
+  let displayDate = '';
+  try {
+    if (article.date) {
+      const d = new Date(article.date);
+      if (!isNaN(d.getTime())) {
+        displayDate = d.toLocaleDateString('fr-FR', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
+      } else {
+        displayDate = String(article.date);
+      }
+    }
+  } catch (e) {
+    displayDate = String(article.date);
+  }
 
   return (
     <article className="pt-20 animate-fade-in">
