@@ -1,15 +1,15 @@
 ---
-id: "joker-folie-a-deux"
+id: joker-folie-a-deux
 title: "Review: Joker Folie à Deux"
-category: "Critique Exclusive"
-image: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?auto=format&fit=crop&q=80&w=1200"
-readTime: "5 min de lecture"
-author: "Jean-Pierre Morel"
-excerpt: "Arthur Fleck est de retour, mais cette fois, il n’est pas seul."
-date: "2024-10-12T12:00:00Z"
+category: Critique Exclusive
+image: https://images.unsplash.com/photo-1531259683007-016a7b628fc3?auto=format&fit=crop&q=80&w=1200
+readTime: 5 min de lecture
+author: Jean-Pierre Morel
+excerpt: Arthur Fleck est de retour, mais cette fois, il n’est pas seul.
+date: 2024-10-12T12:00:00Z
 rating: 4
 ---
-Arthur Fleck est de retour, mais cette fois, il n’est pas seul. La suite tant attendue du chef-d'œuvre de Todd Phillips brouille les pistes entre réalité et comédie musicale.
+Arthur Fleck est  retour, mais cette fois, il n’est pas seul. La suite tant attendue du chef-d'œuvre de Todd Phillips brouille les pistes entre réalité et comédie musicale.
 
 Dans cette suite audacieuse, le réalisateur prend le contre-pied total du premier opus. Là où Joker était une descente aux enfers brutale et solitaire inspirée de Scorsese, Folie à Deux s'aventure dans les méandres d'une psyché partagée, orchestrée comme un rêve fiévreux.
 
