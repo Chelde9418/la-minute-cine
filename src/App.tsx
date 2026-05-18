@@ -5,7 +5,6 @@ import { Home } from './pages/Home';
 import { Review } from './pages/Review';
 import { Listing } from './pages/Listing';
 import { Legal, Privacy } from './pages/Legal';
-import { Admin } from './pages/Admin';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
