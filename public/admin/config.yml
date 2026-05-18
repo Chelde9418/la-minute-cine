@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: Chelde9418/la-minute-cine
   branch: main
 
 media_folder: "public/images/uploads"
@@ -8,23 +9,16 @@ public_folder: "/images/uploads"
 collections:
   - name: "articles"
     label: "Articles"
+    label_singular: "Article"
     folder: "src/content/articles"
     create: true
     slug: "{{slug}}"
     fields:
-      - { label: "ID", name: "id", widget: "string" }
       - { label: "Titre", name: "title", widget: "string" }
-      - { 
-          label: "Catégorie", 
-          name: "category", 
-          widget: "select", 
-          options: ["Films", "Séries", "Avis", "Top Lists"] 
-        }
+      - { label: "Catégorie", name: "category", widget: "select", options: ["Films", "Séries", "Avis", "Top Lists"] }
       - { label: "Image de couverture", name: "image", widget: "image" }
-      - { label: "Temps de lecture", name: "readTime", widget: "string" }
-      - { label: "Auteur", name: "author", widget: "string", default: "LMC Team" }
-      - { label: "Extrait/résumé", name: "excerpt", widget: "string" }
-      - { label: "Date de publication", name: "date", widget: "datetime" }
-      - { label: "Tendance de la semaine", name: "trending", widget: "boolean", default: false }
-      - { label: "Note (/5)", name: "rating", widget: "number", value_type: "int", min: 0, max: 5 }
-      - { label: "Contenu de l'article", name: "body", widget: "markdown" }
+      - { label: "Résumé", name: "excerpt", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Temps de lecture", name: "readTime", widget: "string", default: "5 min" }
+      - { label: "Contenu", name: "body", widget: "markdown" }
+      - { label: "ID Unique", name: "id", widget: "hidden", default: "{{slug}}" }
