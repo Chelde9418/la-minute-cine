@@ -29,7 +29,6 @@ function App() {
             <Route path="/series" element={<Listing />} />
             <Route path="/mentions-legales" element={<Legal />} />
             <Route path="/confidentialite" element={<Privacy />} />
-            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
         <Footer />
