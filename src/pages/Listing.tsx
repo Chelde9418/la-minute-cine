@@ -1,20 +1,35 @@
 import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { LATEST_MOVIES, TOP_SERIES } from '../constants';
 import { MovieCard } from '../components/Cards';
 import { motion } from 'motion/react';
-import { getAllArticles } from '../services/contentService';
-import { Movie } from '../types';
+import { fetchArticles } from '../services/contentService';
+import { Article, Movie } from '../types';
 
 export function Listing() {
   const location = useLocation();
   const isFilms = location.pathname === '/films';
+  const [cmsArticles, setCmsArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchArticles().then(data => {
+      setCmsArticles(data);
+      setLoading(false);
+    });
+  }, []);
   
   const title = isFilms ? 'Films' : 'Séries';
   const description = isFilms 
     ? 'Découvrez nos critiques des derniers longs-métrages sortis en salles et en streaming.' 
     : 'Nos analyses complètes des séries qui font l\'actualité, saison par saison.';
   
-  const cmsArticles = getAllArticles();
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+    </div>;
+  }
+
   const filteredCms = cmsArticles.filter(a => {
     const cat = a.category.toLowerCase();
     if (isFilms) {

@@ -3,8 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
 import { LATEST_MOVIES, TOP_SERIES } from '../constants';
-import { Movie } from '../types';
-import { getAllArticles } from '../services/contentService';
+import { Movie, Article } from '../types';
+import { fetchArticles } from '../services/contentService';
 
 export function Navbar() {
   const location = useLocation();
@@ -13,6 +13,11 @@ export function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
+  const [cmsArticles, setCmsArticles] = useState<Article[]>([]);
+
+  useEffect(() => {
+    fetchArticles().then(setCmsArticles);
+  }, []);
 
   // Close menu when location changes
   useEffect(() => {
@@ -36,7 +41,7 @@ export function Navbar() {
     const query = searchQuery.toLowerCase();
     
     // Get CMS articles and convert to Movie format for search
-    const cmsMovies: Movie[] = getAllArticles().map(a => ({
+    const cmsMovies: Movie[] = cmsArticles.map(a => ({
       id: a.id,
       title: a.title,
       type: (a.category.toLowerCase().includes('série') ? 'serie' : 'film') as any,
@@ -220,6 +225,7 @@ export function Footer() {
           <div className="flex flex-col gap-3">
             <Link to="/mentions-legales" className="text-sm text-on-surface-variant hover:text-primary-container transition-colors">Mentions Légales</Link>
             <Link to="/confidentialite" className="text-sm text-on-surface-variant hover:text-primary-container transition-colors">Confidentialité</Link>
+            <Link to="/admin" className="text-sm text-on-surface-variant hover:text-primary-container transition-colors">Admin</Link>
           </div>
         </div>
         <div>

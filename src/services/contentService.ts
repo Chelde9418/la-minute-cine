@@ -1,19 +1,18 @@
 /// <reference types="vite/client" />
+import { collection, getDocs, doc, setDoc, deleteDoc, getDoc, query, orderBy } from 'firebase/firestore';
+import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { Article } from '../types';
 
-// Use Vite's import.meta.glob to find all markdown files in src/content/articles
+const COLLECTION_NAME = 'articles';
+
+// Static files (for initial migration or fallback)
 const articleFiles = import.meta.glob('../content/articles/*.md', { query: '?raw', eager: true });
 
-const ARTICLE_OVERRIDES_KEY = 'lmc-article-overrides';
-
-export const getAllArticles = (): Article[] => {
+export const getStaticArticles = (): Article[] => {
   const articles: Article[] = [];
-
-  // 1. Load static articles from files
   for (const path in articleFiles) {
     try {
       const content = (articleFiles[path] as any).default;
-      
       const match = content.match(/^---([\s\S]*?)---([\s\S]*)$/);
       if (!match) continue;
 
@@ -48,47 +47,65 @@ export const getAllArticles = (): Article[] => {
       console.error("Failed to parse article:", path, e);
     }
   }
+  return articles;
+};
 
-  // 2. Merge with localStorage overrides
-  const overridesRaw = localStorage.getItem(ARTICLE_OVERRIDES_KEY);
-  if (overridesRaw) {
-    try {
-      const overrides: Article[] = JSON.parse(overridesRaw);
-      overrides.forEach(override => {
-        const index = articles.findIndex(a => a.id === override.id);
-        if (index !== -1) {
-          articles[index] = override; // Update existing
-        } else {
-          articles.push(override); // Add new
-        }
-      });
-    } catch (e) {
-      console.error("Failed to parse article overrides", e);
+export const fetchArticles = async (): Promise<Article[]> => {
+  try {
+    const q = query(collection(db, COLLECTION_NAME), orderBy('date', 'desc'));
+    const snapshot = await getDocs(q);
+    const articles = snapshot.docs.map(doc => doc.data() as Article);
+    
+    // If Firestore is empty, we show static articles
+    if (articles.length === 0) {
+      return getStaticArticles().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }
+    
+    return articles;
+  } catch (error) {
+    handleFirestoreError(error, OperationType.LIST, COLLECTION_NAME);
+    return [];
   }
-
-  return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
-export const updateArticleLocal = (article: Article) => {
-  const overridesRaw = localStorage.getItem(ARTICLE_OVERRIDES_KEY);
-  let overrides: Article[] = [];
-  if (overridesRaw) {
-    try {
-      overrides = JSON.parse(overridesRaw);
-    } catch (e) {}
+export const getArticleById = async (id: string): Promise<Article | undefined> => {
+  try {
+    const docRef = doc(db, COLLECTION_NAME, id);
+    const snapshot = await getDoc(docRef);
+    if (snapshot.exists()) {
+      return snapshot.data() as Article;
+    }
+    
+    // Fallback to static
+    return getStaticArticles().find(a => a.id === id);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.GET, `${COLLECTION_NAME}/${id}`);
+    return undefined;
   }
-
-  const index = overrides.findIndex(a => a.id === article.id);
-  if (index !== -1) {
-    overrides[index] = article;
-  } else {
-    overrides.push(article);
-  }
-
-  localStorage.setItem(ARTICLE_OVERRIDES_KEY, JSON.stringify(overrides));
 };
 
-export const getArticleById = (id: string): Article | undefined => {
-  return getAllArticles().find(a => a.id === id);
+export const saveArticle = async (article: Article): Promise<void> => {
+  try {
+    const docRef = doc(db, COLLECTION_NAME, article.id);
+    await setDoc(docRef, { ...article, date: article.date || new Date().toISOString() });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, `${COLLECTION_NAME}/${article.id}`);
+  }
+};
+
+export const deleteArticle = async (id: string): Promise<void> => {
+  try {
+    const docRef = doc(db, COLLECTION_NAME, id);
+    await deleteDoc(docRef);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `${COLLECTION_NAME}/${id}`);
+  }
+};
+
+// Migration tool to move static files to Firestore
+export const migrateToFirestore = async (): Promise<void> => {
+  const statics = getStaticArticles();
+  for (const article of statics) {
+    await saveArticle(article);
+  }
 };

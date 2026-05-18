@@ -1,11 +1,12 @@
 import { useParams, Link } from 'react-router-dom';
 import { ARTICE_JOKER } from '../constants';
-import { getArticleById, getAllArticles } from '../services/contentService';
+import { getArticleById, fetchArticles } from '../services/contentService';
 import { motion, AnimatePresence } from 'motion/react';
 import { Star, Clock, Calendar, User, ArrowLeft, MessageSquare, Share2, Send, Eye } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { useState, useEffect } from 'react';
 import { recordView, getViewCount } from '../services/viewService';
+import { Article } from '../types';
 
 interface Comment {
   id: string;
@@ -23,16 +24,31 @@ export function Review() {
   const [authorName, setAuthorName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [viewCount, setViewCount] = useState(0);
+  const [article, setArticle] = useState<Article | null>(null);
+  const [trendingArticles, setTrendingArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Load comments and record view
+  // Load comments, record view and fetch article data
   useEffect(() => {
     if (id) {
       const count = recordView(id);
       setViewCount(count);
+      
+      setLoading(true);
+      getArticleById(id).then(data => {
+        setArticle(data || ARTICE_JOKER);
+        setLoading(false);
+      });
     } else {
       const count = getViewCount('joker-folie-a-deux');
       setViewCount(count);
+      setArticle(ARTICE_JOKER);
+      setLoading(false);
     }
+
+    fetchArticles().then(data => {
+      setTrendingArticles(data.filter(a => a.trending && a.id !== id).slice(0, 3));
+    });
 
     const saved = localStorage.getItem(storageKey);
     if (saved) {
@@ -43,14 +59,6 @@ export function Review() {
       }
     }
   }, [id, storageKey]);
-
-  // Try to load from CMS first, then fallback to constant
-  const dynamicArticle = id ? getArticleById(id) : undefined;
-  const article = dynamicArticle || ARTICE_JOKER;
-
-  const trendingArticles = getAllArticles()
-    .filter(a => a.trending && a.id !== id)
-    .slice(0, 3);
 
   const handleAddComment = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,6 +82,14 @@ export function Review() {
       setIsSubmitting(false);
     }, 500);
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   if (!article) return <div className="pt-32 text-center text-on-surface">Article non trouvé</div>;
 

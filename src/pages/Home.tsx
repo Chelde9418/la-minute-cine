@@ -1,12 +1,29 @@
-import { motion } from 'motion/react';
+import { useEffect, useState } from 'react';
+import { fetchArticles } from '../services/contentService';
+import { Article } from '../types';
 import { Star, ArrowRight } from 'lucide-react';
 import { TRENDS, LATEST_MOVIES, TOP_SERIES } from '../constants';
 import { TrendCard, MovieCard } from '../components/Cards';
 import { Link } from 'react-router-dom';
-import { getAllArticles } from '../services/contentService';
+import { motion } from 'motion/react';
 
 export function Home() {
-  const latestArticles = getAllArticles();
+  const [latestArticles, setLatestArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchArticles().then(data => {
+      setLatestArticles(data);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+    </div>;
+  }
+
   const heroArticle = latestArticles[0];
 
   const cmsTrends = latestArticles

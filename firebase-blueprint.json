@@ -1,0 +1,42 @@
+{
+  "entities": {
+    "Article": {
+      "title": "Article",
+      "description": "A blog post article",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "The title of the article" },
+        "category": { "type": "string", "description": "Category (Films, Séries, etc.)" },
+        "date": { "type": "string", "format": "date-time", "description": "Publication date" },
+        "image": { "type": "string", "description": "URL of the cover image" },
+        "excerpt": { "type": "string", "description": "Short summary of the article" },
+        "readTime": { "type": "string", "description": "Estimated reading time" },
+        "content": { "type": "string", "description": "Markdown content of the article" },
+        "author": { "type": "string", "description": "Author name" },
+        "trending": { "type": "boolean", "description": "Whether the article is trending" },
+        "rating": { "type": "number", "description": "Rating out of 5" },
+        "id": { "type": "string", "description": "Unique slug identifier" }
+      },
+      "required": ["title", "category", "content", "id"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Authorized admin users",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" }
+      },
+      "required": ["email"]
+    }
+  },
+  "firestore": {
+    "articles": {
+      "schema": "Article",
+      "description": "Collection of blog articles"
+    },
+    "admins": {
+      "schema": "Admin",
+      "description": "List of admin UIDs"
+    }
+  }
+}
